@@ -47,6 +47,6 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()
-            ->json(['success' => true, 'message' => 'Hi ' . $user->name . ', Selamat Datang di To Do List', 'access_token' => $token, 'email' => $user->email]);
+            ->json(['success' => true, 'message' => 'Hi ' . $user->name . ', Welcome to To Do List', 'access_token' => $token, 'email' => $user->email]);
     }
 }
