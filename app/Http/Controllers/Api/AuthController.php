@@ -89,7 +89,7 @@ class AuthController extends Controller
 
         return response()
             ->json(['success' => true,
-                'message' => 'Password has been changed.',
+                'message' => 'Your password has been changed.',
             ]);
 
     }
@@ -101,7 +101,7 @@ class AuthController extends Controller
             $response = [
                 'success' => true,
                 'data' => $data,
-                'message' => 'data available',
+                'message' => 'Data available',
             ];
             return response()->json($response, 200);
         } catch (Exception $th) {
