@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController; // Pastikan namespace sesuai
 use App\Http\Controllers\Api\TasksController; // Pastikan namespace sesuai
+use App\Http\Controllers\Api\CategoriesController; // Pastikan namespace sesuai
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/search-user', [AuthController::class, 'search']);
     
     Route::resource('tasks', TasksController::class);
+    Route::resource('categories', CategoriesController::class);
 });
 
 
