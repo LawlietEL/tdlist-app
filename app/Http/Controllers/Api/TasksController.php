@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -165,4 +166,27 @@ class TasksController extends Controller
             return response()->json($response, 500);
         }
     }
+
+    public function todays()
+    {
+        try {
+            $today = Carbon::today();
+
+            $tasks = Tasks::whereDate('created_at', $today)->get();
+            $response = [
+                'success' => true,
+                'data' => $data,
+                'message' => 'Task Added',
+            ];
+
+            return response()->json($response, 200);
+        } catch (\Exception $th) {
+            $response = [
+                'success' => false,
+                'message' => $th->getMessage(),
+            ];
+            return response()->json($response, 500);
+        }
+    }
+
 }

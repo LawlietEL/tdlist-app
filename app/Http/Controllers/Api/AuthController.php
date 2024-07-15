@@ -36,18 +36,43 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()
-                ->json(['success' => false, 'message' => 'Unauthorized'], 401);
-        }
-        // $request->session()->regenerate();
-        $user = User::where('email', $request['email'])->firstOrFail();
-        // $request->user()->tokens()->delete();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
+{
+    if (!Auth::attempt($request->only('email', 'password'))) {
         return response()
-            ->json(['success' => true, 'message' => 'Hi ' . $user->name . ', Welcome to To Do List', 'access_token' => $token, 'email' => $user->email]);
+            ->json(['success' => false, 'message' => 'Unauthorized'], 401);
+    }
+    
+    // $request->session()->regenerate();
+    $user = User::where('email', $request['email'])->firstOrFail();
+
+    // $request->user()->tokens()->delete();
+    $token = $user->createToken('auth_token')->plainTextToken;
+    return response()
+        ->json(['success' => true, 'message' => 'Hi ' . $user->name . ', welcome to To DO List', 
+        'access_token' => $token, 
+        'name' => $user->name,
+        'email' => $user->email,
+        'users_id' => $user->id]);
+}
+
+
+    public function user(Request $request)
+    {
+        try {
+            $data = $request->user();
+            $response = [
+                'success' => true,
+                'data' => $data,
+                'message' => 'Data tersedia',
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $th) {
+            $response = [
+                'success' => false,
+                'message' => $th,
+            ];
+            return response()->json($response, 500);
+        }
     }
 
     public function logout(Request $request)
