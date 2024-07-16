@@ -11,35 +11,48 @@ use Validator;
 
 class AuthController extends Controller
 {
-   public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+    public function register(Request $request)
+{
+    // Validasi input dari request
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()
-            ->json(['data' => $user, 'access_token' => $token]);
+    // Jika validasi gagal, kembalikan respons dengan pesan kesalahan
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors()->toJson(),
+        ], 422);
     }
+
+    // Buat entri pengguna baru dalam database
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    // Buat token akses untuk pengguna
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    // Kembalikan respons JSON dengan data pengguna dan token akses
+    return response()->json([
+        'success' => true,
+        'message' => 'Akun berhasil dibuat, silahkan login.', 
+        'data' => $user,
+        'access_token' => $token,
+    ], 200); // 200 OK, registrasi berhasil
+}
+
+    
 
     public function login(Request $request)
 {
     if (!Auth::attempt($request->only('email', 'password'))) {
         return response()
-            ->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            ->json(['success' => false, 'message' => '"Incorrect email or password, please check again."'], 401);
     }
     
     // $request->session()->regenerate();

@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user'])
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/change-password', [AuthController::class, 'change_password']);
+    Route::put('/change-password', [AuthController::class, 'change_password']);
     Route::post('/search-user', [AuthController::class, 'search']);
     
     Route::resource('tasks', TasksController::class);
